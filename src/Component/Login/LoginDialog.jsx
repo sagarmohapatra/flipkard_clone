@@ -133,7 +133,7 @@ const LoginDialog = ({ open, setopen }) => {
         // console.log(data);
 
         if (!responce) return;
-        git
+
         handleClose();
         setaccounts(value.first)
 
