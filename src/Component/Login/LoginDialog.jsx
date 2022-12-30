@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Dialog, Box, TextField, Typography, Button, styled } from '@mui/material'
-import { authentication } from '../../service/api'
-import DataContext from "../Context/DataProvider"
+import { authentication, authenticationLogin } from '../../service/api'
+import { DataContext } from "../../Context/DataProvider"
 
 
 const Component = styled(Box)`
@@ -63,6 +63,13 @@ font-weight:600;
 cursor:pointer;
 margin-top:35px
 `
+const Error = styled(Typography)`
+font-size:10px;
+color:#ff6161;
+line-height:0;
+margin-top:10px;
+font-weight:600
+`
 const accountInitialValue = {
     login: {
         view: "login",
@@ -78,25 +85,39 @@ const accountInitialValue = {
 
 
 const LoginDialog = ({ open, setopen }) => {
-
+    const [error, seterror] = React.useState(false)
 
 
     // console.log(open, "psaa");
     const handleClose = () => {
+        setvalue({
+            first: "",
+            last: "",
+            username: "",
+            eamil: "",
+            password: "",
+            phone: ""
+        })
+        setlogin({
+            username: "",
+            password: ""
+        })
         setopen(false)
         toggleAccount(accountInitialValue.login)
+        seterror(false)
+
     }
     const [account, toggleAccount] = React.useState(accountInitialValue.login)
     const [value, setvalue] = React.useState({
         first: "",
         last: "",
-        user: "",
+        username: "",
         eamil: "",
         password: "",
         phone: ""
     })
 
-    const [accounts, setaccounts] = useContext(DataContext)
+    const { accounts, setaccounts } = useContext(DataContext)
     const change = () => {
         toggleAccount(accountInitialValue.signup)
     }
@@ -110,10 +131,37 @@ const LoginDialog = ({ open, setopen }) => {
     const signup = async () => {
         const responce = await authentication(value)
         // console.log(data);
+
         if (!responce) return;
+        git
         handleClose();
-        setaccounts(signup.first)
+        setaccounts(value.first)
+
     }
+    const [login, setlogin] = React.useState({
+        username: "",
+        password: ""
+    })
+    const onValue = (e) => {
+        const copylogin = { ...login }
+        copylogin[e.target.name] = e.target.value
+        setlogin(copylogin)
+    }
+
+    const loginUser = async () => {
+        const response = await authenticationLogin(login)
+        console.log(response);
+        if (response.status === 200) {
+            handleClose()
+            setaccounts(response.data.data.first)
+
+        } else {
+            seterror(true)
+        }
+
+
+    }
+
     return (
         <Dialog open={open} onClose={handleClose} >
             <Component>
@@ -125,10 +173,11 @@ const LoginDialog = ({ open, setopen }) => {
                         <Typography>{account.subheading}</Typography>
                     </Image>
                     {account.view === "login" ? <Wrraper>
-                        <TextField variant="standard" label="Enter Email/Mobile Number" />
-                        <TextField variant="standard" label="Enter Password" style={{ marginTop: "5px" }} />
+                        <TextField variant="standard" onChange={(e) => onValue(e)} name="username" value={login.username} label="Enter Username" />
+                        <TextField variant="standard" onChange={(e) => onValue(e)} name="password" value={login.password} label="Enter Password" style={{ marginTop: "5px" }} />
+                        {error && <Error>plz enter correct username and password</Error>}
                         <Text style={{ marginTop: "19px" }} >By continuing, you agree to Flipkart's Terms of Use and Privacy Policy</Text>
-                        <LoginButton>Login</LoginButton>
+                        <LoginButton onClick={loginUser}>Login</LoginButton>
                         <Typography style={{ textAlign: "center ", marginTop: "10px" }}>OR</Typography>
                         <RequestOtp>Request OTP</RequestOtp>
                         <CreateAccount onClick={change} >New to Flipkart? Create an account</CreateAccount>
@@ -136,7 +185,7 @@ const LoginDialog = ({ open, setopen }) => {
                         <Wrraper>
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name="first" value={value.first} label="Enter Firstname" />
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name="last" value={value.last} label="Enter Lastname" />
-                            <TextField variant="standard" onChange={(e) => onInputChange(e)} name="user" value={value.user} label="Enter Username" />
+                            <TextField variant="standard" onChange={(e) => onInputChange(e)} name="username" value={value.username} label="Enter Username" />
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name="eamil" value={value.eamil} label="Enter Email" />
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name="password" value={value.password} label="Enter Password" />
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name="phone" value={value.phone} label="Enter Phone" />
