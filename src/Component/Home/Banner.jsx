@@ -3,11 +3,21 @@ import Carousel from "react-multi-carousel";
 import 'react-multi-carousel/lib/styles.css';
 import { bannerData } from '../Contant/data';
 import { styled } from '@mui/system';
+import { ThemeProvider } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { responsiveFontSizes } from '@mui/material'
 
-const Image = styled("img")({
+let theme = createTheme();
+theme = responsiveFontSizes(theme);
+
+const Image = styled("img")(({ theme }) => ({
     width: "100%",
-    height: 280
-})
+    height: 280,
+    [theme.breakpoints.down("md")]: {
+        objectFit: "cover",
+        height: 180
+    }
+}))
 
 const responsive = {
     superLargeDesktop: {
@@ -30,23 +40,25 @@ const responsive = {
 };
 const Banner = () => {
     return (
-        <Carousel responsive={responsive}
-            dotListClass="custom-dot-list-style"
-            itemClass="carousel-item-padding-40-px"
-            containerClass="carousel-container"
-            swipeable={false}
-            draggable={false}
-            infinite={true}
-            autoPlay={true}
-            autoPlaySpeed={4000}
-            slidesToSlide={1}
-        >
-            {
-                bannerData.map(data => (
-                    <Image src={data.url} alt="banner" />
-                ))
-            }
-        </Carousel>
+        <ThemeProvider theme={theme}>
+            <Carousel responsive={responsive}
+                dotListClass="custom-dot-list-style"
+                itemClass="carousel-item-padding-40-px"
+                containerClass="carousel-container"
+                swipeable={false}
+                draggable={false}
+                infinite={true}
+                autoPlay={true}
+                autoPlaySpeed={4000}
+                slidesToSlide={1}
+            >
+                {
+                    bannerData.map(data => (
+                        <Image src={data.url} alt="banner" />
+                    ))
+                }
+            </Carousel>
+        </ThemeProvider>
     )
 }
 

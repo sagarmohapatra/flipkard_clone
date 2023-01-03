@@ -1,15 +1,20 @@
-import { AppBar, Toolbar, styled, Box, Typography } from '@mui/material'
+import { AppBar, Toolbar, styled, Box, Typography, IconButton, ListItem, List, ListItemButton, ListItemIcon, ButtonBase } from '@mui/material'
 import React from 'react'
 import CustomButton from './CustomButton'
 import Search from './Search'
+import { Link } from 'react-router-dom'
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+
 
 const StyledHeader = styled(AppBar)`
 background:#2874f0;
-height:55px
+height:55
 `
-const ComponentBox = styled(Box)`
+const ComponentBox = styled(Link)`
 margin-left:12%;
-line-height:0
+line-height:0;
+color:white
 `
 
 const SubHeading = styled(Typography)`
@@ -25,17 +30,59 @@ const PlusImage = styled("img")({
 
 })
 
-const CustomButtonWraper = styled(Box)`
-margin:0 5% 0 auto
-`
+const CustomButtonWraper = styled(Box)(({ theme }) => ({
+  margin: "0 5% 0 auto",
+  [theme.breakpoints.down("md")]: {
+    display: "none"
+  }
+}))
+
+const MenuButton = styled(IconButton)(({ theme }) => ({
+  display: "none",
+  [theme.breakpoints.down("md")]: {
+    display: "block"
+  }
+}))
+
+
+
 const Header = () => {
   const logoURL = 'https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_8d85f4.png';
   const subURL = 'https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/plus_aef861.png';
 
+  const [open, setopen] = React.useState(false)
+  const handleOpen = () => {
+    setopen(true)
+  }
+  const handleClose = () => {
+    setopen(false)
+  }
+
+  const list = () => {
+    <Box>
+      <List>
+        <ButtonBase>
+          <ListItem button  >
+
+
+            <CustomButton />
+
+          </ListItem>
+        </ButtonBase>
+      </List>
+    </Box>
+  }
   return (
     <StyledHeader>
       <Toolbar style={{ minHeight: 55 }}>
-        <ComponentBox>
+        <MenuButton style={{ color: "inherit" }} onClick={handleOpen}>
+          <MenuIcon />
+        </MenuButton>
+        <Drawer open={open} onClose={handleClose} >
+          {list()}
+
+        </Drawer>
+        <ComponentBox to="/">
           <img src={logoURL} style={{ width: 75 }} />
           <Box style={{ display: "flex" }}>
             <SubHeading>Explore&nbsp;
