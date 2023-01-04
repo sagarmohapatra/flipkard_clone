@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getProducts } from "../../redux/action/productAction"
 import { List } from '@mui/material';
 import { ListItem } from '@mui/material';
+import { Link } from 'react-router-dom';
 const SearchBox = styled(Box)`
 background:#fff;
 width:30.5%;
@@ -47,8 +48,10 @@ const Search = () => {
     return (
         <SearchBox >
             <InputSearch
-                placeholder='Search for Products,brands and more' />
-            onChange={(e) => getText(e.target.value)}
+                placeholder='Search for Products,brands and more' onChange={(e) => getText(e.target.value)}
+                value={text}
+            />
+
 
             <SerachIcon>
                 <SearchIcon />
@@ -59,7 +62,12 @@ const Search = () => {
                     {
                         products.filter(product => product.title.longTitle.toLowerCase().includes(text.toLowerCase())).map(val => (
                             <ListItem>
-                                {val.title.longTitle}
+                                <Link to={`/product/${val.id}`}
+                                    onClick={() => settext("")}
+                                    style={{ color: "inherit" }}
+                                >
+                                    {val.title.longTitle}
+                                </Link>
                             </ListItem>
                         ))
                     }

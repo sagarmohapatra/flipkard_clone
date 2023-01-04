@@ -15,6 +15,7 @@ const WrapImage = styled(Box)(({ theme }) => ({
     margin: "55px 50px 0 50px",
     justifyContent: "space-between",
     // overflow: "overlay",
+
     [theme.breakpoints.down("md")]: {
         margin: 0
     }
@@ -32,16 +33,18 @@ font-family:inherit;
 const Navbar = () => {
     return (
         <ThemeProvider theme={theme}>
-            <WrapImage>
-                {
-                    navData.map(data => (
-                        <SingleImage>
-                            <img src={data.url} style={{ width: 64 }} />
-                            <Paragraph>{data.text}</Paragraph>
-                        </SingleImage>
-                    ))
-                }
-            </WrapImage>
+            <Box style={{ background: "#fff" }}>
+                <WrapImage>
+                    {
+                        navData.map(data => (
+                            <SingleImage>
+                                <img src={data.url} style={{ width: 64 }} />
+                                <Paragraph>{data.text}</Paragraph>
+                            </SingleImage>
+                        ))
+                    }
+                </WrapImage>
+            </Box>
         </ThemeProvider>
     )
 }

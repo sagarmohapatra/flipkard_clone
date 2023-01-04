@@ -7,6 +7,9 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { responsiveFontSizes } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart } from "../../redux/action/cartAction"
 
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
@@ -41,13 +44,23 @@ const StyleButton = styled(Button)(({ theme }) => ({
     }
 }))
 const ActionItem = ({ product }) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { id } = product
+    const [quantity, setquantity] = React.useState(1)
+
+    const additemToCart = () => {
+        dispatch(addToCart(id, quantity))
+        navigate("/cart")
+    }
     return (
         <ThemeProvider theme={theme}>
             <LeftContainer>
                 <Box style={{ padding: "15px 20px", border: "1px solid #f0f0f0" }}>
                     <Img src={product.detailUrl} alt="product" />
                 </Box>
-                <StyleButton variant='contained' style={{ marginRight: 10, background: "#ff9f00" }}><ShoppingCartIcon />Add to card</StyleButton>
+                <StyleButton variant='contained' style={{ marginRight: 10, background: "#ff9f00" }} onClick={() => additemToCart()}><ShoppingCartIcon />Add to card</StyleButton>
                 <StyleButton variant='contained' style={{ background: "#fb541b" }}><FlashOnIcon />Buy Now</StyleButton>
             </LeftContainer>
         </ThemeProvider>
