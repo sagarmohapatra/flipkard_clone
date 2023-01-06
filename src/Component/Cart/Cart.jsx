@@ -8,7 +8,8 @@ import CartItem from './CartItem'
 import TotalView from './TotalView'
 import Button from '@mui/material/Button';
 import EmptyCard from './EmptyCard'
-
+import { payUsingPaytm } from '../../service/api'
+import { post } from "../../utils/paytm"
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { responsiveFontSizes } from '@mui/material'
@@ -60,6 +61,15 @@ const LeftComponent = styled(Grid)(({ theme }) => ({
 const Cart = () => {
     const { cartitems } = useSelector(state => state.cart)
     console.log(cartitems);
+
+    const buyNow = async () => {
+        const response = await payUsingPaytm({ amount: 456, email: "sagarkumar5@gmail.com" })
+        const information = {
+            action: "https://securegw-stage.paytm.in/order/process",
+            params: response
+        }
+        post(information)
+    }
     return (
         <ThemeProvider theme={theme}>
             <>
@@ -77,7 +87,7 @@ const Cart = () => {
                                     ))
                                 }
                                 <ButtonWrraper>
-                                    <StyledButton style={{ color: "#fff", background: "#fb641b" }}> Place Order</StyledButton>
+                                    <StyledButton style={{ color: "#fff", background: "#fb641b" }} onClick={() => buyNow()}> Place Order</StyledButton>
                                 </ButtonWrraper>
                             </LeftComponent>
                             <Grid item lg={3} md={3} sm={12} xs={12}>

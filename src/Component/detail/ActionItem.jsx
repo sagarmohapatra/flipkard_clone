@@ -10,7 +10,8 @@ import { responsiveFontSizes } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from "../../redux/action/cartAction"
-
+import { payUsingPaytm } from '../../service/api';
+import { post } from "../../utils/paytm"
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
@@ -54,6 +55,14 @@ const ActionItem = ({ product }) => {
         dispatch(addToCart(id, quantity))
         navigate("/cart")
     }
+    const buyNow = async () => {
+        const response = await payUsingPaytm({ amount: 456, email: "sagarkumar5@gmail.com" })
+        const information = {
+            action: "https://securegw-stage.paytm.in/order/process",
+            params: response
+        }
+        post(information)
+    }
     return (
         <ThemeProvider theme={theme}>
             <LeftContainer>
@@ -61,7 +70,7 @@ const ActionItem = ({ product }) => {
                     <Img src={product.detailUrl} alt="product" />
                 </Box>
                 <StyleButton variant='contained' style={{ marginRight: 10, background: "#ff9f00" }} onClick={() => additemToCart()}><ShoppingCartIcon />Add to card</StyleButton>
-                <StyleButton variant='contained' style={{ background: "#fb541b" }}><FlashOnIcon />Buy Now</StyleButton>
+                <StyleButton variant='contained' style={{ background: "#fb541b" }} onClick={() => buyNow()}><FlashOnIcon />Buy Now</StyleButton>
             </LeftContainer>
         </ThemeProvider>
     )
