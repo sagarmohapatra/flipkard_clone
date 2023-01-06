@@ -56,7 +56,7 @@ const TotalView = ({ cartitems }) => {
                 <ActualHeading>PRICE DETAILS</ActualHeading>
             </Heading>
             <Container>
-                <Typography>Price({cartitems?.length}item)
+                <Typography>Price({cartitems?.length})item
                     <Price component="span">₹{price}</Price>
                 </Typography>
 
